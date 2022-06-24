@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:movies_app/network/app_client.dart';
 import 'package:movies_app/network/requests/model/error_response_model.dart';
 import 'package:movies_app/network/requests/model/request_data_model.dart';
 import 'package:movies_app/network/requests/requests.dart';
@@ -8,7 +9,7 @@ class PostRequest implements AppRequests {
   @override
   Future<dynamic> sendRequest(RequestDataModel requestDataModel) async {
     try {
-      dynamic response = await Dio().post(
+      dynamic response = await NetworkManager.addInterceptors(Dio()).post(
           AppConstants.baseUrl + requestDataModel.url,
           data: requestDataModel.body,
           queryParameters: requestDataModel.queryParams,
