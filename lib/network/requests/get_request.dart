@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:movies_app/network/app_client.dart';
 import 'package:movies_app/network/requests/model/error_response_model.dart';
@@ -7,17 +9,24 @@ import 'package:movies_app/utilities/app_constants.dart';
 
 class GetRequest implements AppRequests {
   @override
-  Future<dynamic> sendRequest(RequestDataModel requestDataModel) async {
+  Future<dynamic> sendRequest(
+      Dio dio, RequestDataModel requestDataModel) async {
     try {
-      dynamic response = await NetworkManager.addInterceptors(Dio()).get(
+      log("----- request -----:\nUrl: ${requestDataModel.url}\nqueryParam: ${requestDataModel.queryParams}\nheaders: ${requestDataModel.headers} body: ${requestDataModel.body}\n");
+      final response = await dio.get(
           AppConstants.baseUrl + requestDataModel.url,
           queryParameters: requestDataModel.queryParams,
           options: Options(
-              headers: requestDataModel.headers, receiveTimeout: 50000));
-      if(response!=null){
-        return response;
+              headers: requestDataModel.headers,
+              receiveTimeout: 50000,
+              sendTimeout: 500));
+      log("----- response -----:\nstatusCode ${response.statusCode}\ndata: ${response.data}");
+
+      if (response != null) {
+        return response.data;
       }
     } on DioError catch (error) {
+      log("----- Error response -----: \nmessage: ${error.message}\nresponse ${error.response}");
       throw ErrorResponse(errorCode: "", errorMessage: error.message);
     }
   }

@@ -23,27 +23,30 @@ class NetworkManager {
   Future<dynamic> executeRequest(RequestDataModel requestDataModel) async {
     try {
       _prepareRequestOptions(requestDataModel);
-      return await _appRequests?.sendRequest(requestDataModel);
+      return await _appRequests?.sendRequest(Dio(),requestDataModel);
     } on ErrorResponse catch (e) {
       rethrow;
     }
   }
 
   void _prepareRequestOptions(RequestDataModel requestDataModel) {
+    Map<String,dynamic> queryPrams = {"api_key": AppConstants.apiKey};
     if (requestDataModel.queryParams != null) {
-      requestDataModel.queryParams?.addAll({"api_key": AppConstants.apiKey});
+      queryPrams.addAll(requestDataModel.queryParams!);
+      requestDataModel.queryParams!.clear();
+      requestDataModel.queryParams!.addAll(queryPrams);
     } else {
       requestDataModel.queryParams = {"api_key": AppConstants.apiKey};
     }
   }
 
-  static String _logRequestData(RequestOptions request){
-    return "----- request -----:\nUrl: ${request.path}\nqueryParam: ${request.queryParameters}\nheaders: ${request.headers} body: ${request.data}\n";
+  static void _logRequestData(RequestOptions request){
+    log ("----- request -----:\nUrl: ${request.path}\nqueryParam: ${request.queryParameters}\nheaders: ${request.headers} body: ${request.data}\n");
   }
-  static String _logResponseData(Response response){
-    return "----- response -----:\nstatusCode ${response.statusCode}\ndata: ${response.data}";
+  static void _logResponseData(Response response){
+    log( "----- response -----:\nstatusCode ${response.statusCode}\ndata: ${response.data}");
   }
-  static String _logErrorData(DioError dioError){
-    return "----- Error response -----: \nmessage: ${dioError.message}\nresponse ${dioError.response}";
+  static void _logErrorData(DioError dioError){
+    log( "----- Error response -----: \nmessage: ${dioError.message}\nresponse ${dioError.response}");
   }
 }
