@@ -4,7 +4,7 @@ class AppSharePreferences{
   static void addListOfData (String key , String data)async{
     final prefs = await SharedPreferences.getInstance();
     final List<String>? items =await prefs.getStringList(key);
-    print(items.toString());
+
     if(items!=null&&items.isNotEmpty){
       items.add(data);
       await prefs.setStringList(key,items);
@@ -16,7 +16,7 @@ class AppSharePreferences{
   static Future<List<String>> getListOfData(String key)async{
     final prefs = await SharedPreferences.getInstance();
     final List<String>? items =await prefs.getStringList(key);
-    print(items.toString());
+
     return items??[];
   }
 }

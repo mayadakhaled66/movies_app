@@ -13,9 +13,9 @@ class AppMainPage extends StatelessWidget {
       : super(key: key);
 
   PreferredSizeWidget? buildAppBarWidget() {
-    if (isPageWithAppbar) {
+    if ( isPageWithAppbar) {
       return AppBar(
-        title: Text(appBarTitle ?? ""),
+        title: Text(appBarTitle ?? "",),
       );
     }else{
       return null;
